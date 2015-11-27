@@ -10,7 +10,7 @@ apply plugin: "spring-boot"
 
 jar {
     baseName = "spring-boot-rest-jms-activemq"
-    version =  "1.0.0"
+    version = "1.0.0"
 }
 
 sourceCompatibility = 1.8
@@ -20,8 +20,8 @@ repositories { jcenter() }
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web",
-			"org.springframework:spring-jms",
-			"org.apache.activemq:activemq-broker"
-			
-	testCompile "org.springframework.boot:spring-boot-starter-test"
+            "org.springframework:spring-jms",
+            "org.apache.activemq:activemq-broker"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
