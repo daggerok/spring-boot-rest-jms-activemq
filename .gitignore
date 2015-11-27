@@ -2,10 +2,13 @@
 .classpath
 .project
 .springBeans
+*.iml
 gradlew
+.idea/
 .gradle/
 .settings/
 bin/
 build/
 gradle/
 target/
+out/
