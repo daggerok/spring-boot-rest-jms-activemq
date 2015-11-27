@@ -22,4 +22,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web",
 			"org.springframework:spring-jms",
 			"org.apache.activemq:activemq-broker"
+			
+	testCompile "org.springframework.boot:spring-boot-starter-test"
 }

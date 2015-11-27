@@ -6,5 +6,6 @@ gradlew
 .gradle/
 .settings/
 bin/
-gradle/
 build/
+gradle/
+target/
