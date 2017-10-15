@@ -1,5 +1,6 @@
-package com.daggerok.rest2activemq;
+package daggerok;
 
+import daggerok.Application;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
