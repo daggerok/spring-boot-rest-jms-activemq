@@ -1,0 +1,14 @@
+mq:
+  user: ${MQ_USER:admin}
+  pass: ${MQ_PASSWORD:password}
+  server:
+    host: ${MQ_HOST:localhost}
+    port: ${MQ_PORT:61616}
+  url: tcp://${mq.server.host}:${mq.server.port}
+db:
+  name: ${DB_NAME:db}
+  user: ${DB_USER:user}
+  pass: ${DB_PASSWORD:password}
+  server:
+    host: ${DB_HOST:localhost}
+    port: ${DB_PORT:5432}

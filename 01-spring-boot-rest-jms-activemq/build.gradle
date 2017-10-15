@@ -1,0 +1,39 @@
+//buildscript {
+//    repositories { jcenter() }
+//    dependencies { classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.7.RELEASE" }
+//}
+
+plugins {
+    id "java"
+    id "idea"
+    id "eclipse"
+    id "org.springframework.boot" version "1.5.7.RELEASE"
+}
+
+jar {
+    baseName = "spring-boot-rest-jms-activemq"
+    version = "1.0.0"
+}
+
+sourceCompatibility = sourceCompatibility = 1.8
+
+repositories { jcenter() }
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-web",
+            "org.springframework:spring-jms",
+            "org.apache.activemq:activemq-broker"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+wrapper {
+    gradleVersion = "4.2.1"
+    distributionType = "ALL"
+}
+
+clean {
+    delete "$buildDir"
+    delete "$projectDir/out"
+    delete "$projectDir/target"
+}
