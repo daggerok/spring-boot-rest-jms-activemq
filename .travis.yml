@@ -41,7 +41,6 @@ script:
   - cd $root/02-spring-jms-docker-activemq
   - bash gradlew clean integrationTests
   - bash gradlew clean build
-  - bash gradlew composeUp composeDown
 
 before_cache:
   - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock
