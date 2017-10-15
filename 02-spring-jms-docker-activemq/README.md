@@ -1,4 +1,4 @@
-# spring-jms docker activemq [![Build Status](https://travis-ci.org/daggerok/spring-jms-docker-activemq.svg?branch=master)](https://github.com/daggerok/spring-jms-docker-activemq)
+# spring-jms docker activemq [![Build Status](https://travis-ci.org/daggerok/spring-boot-rest-jms-activemq.svg?branch=master)](https://github.com/daggerok/spring-boot-rest-jms-activemq)
 
 **gradle wrapper**
 

@@ -1,4 +1,4 @@
-# spring-boot jms activemq [![Build Status](https://travis-ci.org/daggerok/spring-jms-docker-activemq.svg?branch=master)](https://github.com/daggerok/spring-jms-docker-activemq)
+# spring-boot jms activemq [![Build Status](https://travis-ci.org/daggerok/spring-boot-rest-jms-activemq.svg?branch=master)](https://github.com/daggerok/spring-boot-rest-jms-activemq)
 
 This repository contains some activemq examples
 
