@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Stomp</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="node_modules/stompjs/lib/stomp.js"></script>
+<script src="node_modules/sockjs-client/dist/sockjs.js"></script>
+<script>
+  (function main() {
+    'use strict';
+
+    function render(app, html) {
+      const fragment = document.createDocumentFragment();
+      const el = document.createElement('div');
+      el.innerHTML = html;
+      fragment.appendChild(el);
+      app.insertBefore(fragment, app.firstChild);
+    }
+
+    const subscriptionsInfoTemplate = {
+      topic: 'jms.topic.name',
+      cb: payload => console.log('subscription payload:', payload),
+      unsubscribe: null,
+    };
+
+    const STATE = {
+      subscriptionsInfo: [],
+      endpoint: '/ws',
+      ws: null,
+      stompClient: null,
+      connected: false,
+    };
+
+    function initSubscriptionInfo(subscriptionInfo) {
+      STATE.subscriptionsInfo = subscriptionInfo || [];
+      return STATE.subscriptionsInfo;
+    }
+
+    function addToSubscriptionInfo(subscriptionInfo) {
+      if (!STATE.subscriptionsInfo) initSubscriptionInfo();
+      if (!subscriptionInfo) return STATE.subscriptionsInfo;
+      if (!subscriptionInfo.length) STATE.subscriptionsInfo.push(subscriptionInfo);
+      else STATE.subscriptionsInfo.concat(subscriptionInfo);
+      return STATE.subscriptionsInfo;
+    }
+
+    function ws(endpoint) {
+      console.log('on ws', endpoint);
+      STATE.ws = SockJS(endpoint || STATE.endpoint);
+      return STATE.ws;
+    }
+
+    function stompClient(ws) {
+      console.log('on stompClient', ws);
+      STATE.stompClient = Stomp.over(ws || STATE.ws);
+      return STATE.stompClient;
+    }
+
+    function onConnect(frame) {
+      console.log('on connect', frame);
+      STATE.connected = true;
+      if (STATE.subscriptionsInfo && STATE.subscriptionsInfo.length) {
+        STATE.subscriptionsInfo.forEach(s => {
+          console.log('subscribing', s);
+          s.unsubscribe = STATE.stompClient.subscribe(s.topic, s.cb);
+          console.log('topic', s.topic, 'subscribed. unsubscriber register as', s.unsubscribe);
+        });
+      }
+    }
+
+    function onDisconnect(message) {
+      console.log('on disconnect', message);
+      STATE.stompClient = null;
+      STATE.ws = null;
+      //STATE.subscriptionsInfo = [];
+    }
+
+    function connect() {
+      if (!STATE.ws)
+        STATE.ws = ws(STATE.endpoint);
+      if (!STATE.stompClient)
+        STATE.stompClient = stompClient(STATE.ws);
+      if (STATE.stompClient && STATE.stompClient.connect)
+        STATE.stompClient.connect({ user: 'anon' }, onConnect, onDisconnect);
+    }
+
+    function disconnect() {
+      if (!!STATE.stompClient) STATE.stompClient.disconnect();
+    }
+
+    const APP = {
+      addToSubscriptionInfo,
+      ws,
+      stompClient,
+      connect,
+      disconnect,
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = document.querySelector('#app');
+
+      const ws = SockJS('/stomp-ws-endpoint');
+      const stompClient = Stomp.over(ws);
+      stompClient.connect({}, frame => {
+        stompClient.subscribe('/topic', m => console.info(m));
+//        stompClient.send('jms.topic.messages', 'hi!');
+      }, err => console.error(err));
+
+      var stomp = {};
+
+      render(app, `<p>connecting...</p>`);
+      fetch("http://localhost:8080/api/v1/stomp")
+        .then(resp => resp.json())
+        .then(config => stomp = config['stomp'])
+        .then(_ => render(app, `
+          <div>
+            received: ${JSON.stringify(stomp)}
+          </div>
+        `))
+      ;
+    }, false)
+  })();
+</script>
+</body>
+</html>

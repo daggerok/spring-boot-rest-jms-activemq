@@ -19,7 +19,8 @@ public class MessageResource {
 
   @ResponseStatus(ACCEPTED)
   @PostMapping("/api/v1/messages")
-  public void send(@RequestBody @Validated final Message message) {
+  public Message send(@RequestBody @Validated final Message message) {
     messageProducer.send(message);
+    return message;
   }
 }

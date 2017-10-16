@@ -1,0 +1,22 @@
+{
+  "name": "some-web",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Maksim Kostromin <daggerok@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/daggerok/spring-boot-rest-jms-activemq",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "sockjs-client": "1.1.4",
+    "stomp-websocket": "2.3.4"
+  }
+}

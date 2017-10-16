@@ -14,7 +14,7 @@ public class MessageProducer {
   final JmsTemplate jmsTemplate;
 
   public void send(final Message message) {
-    log.info("producing {}", message);
-    jmsTemplate.convertAndSend(".jms.topic.message", message);
+    log.info("before save {}", message);
+    jmsTemplate.convertAndSend("jms.topic.messages", message);
   }
 }

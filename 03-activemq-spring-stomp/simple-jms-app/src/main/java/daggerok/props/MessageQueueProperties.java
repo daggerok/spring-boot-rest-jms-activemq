@@ -10,38 +10,94 @@ import org.springframework.stereotype.Component;
 public class MessageQueueProperties {
 
   /**
-   * ActiveMQ writer broker user
+   * ActiveMQ user
    */
   String user;
 
   /**
-   * ActiveMQ writer broker password
+   * ActiveMQ password
    */
   String password;
 
   /**
-   * ActiveMQ server.
+   * ActiveMQ URL
    */
+  String url;
+
+  /**
+   * ActiveMQ server
+   */
+  Server server;
+
+  /**
+   * ActiveMQ STOMP
+   */
+  Stomp stomp;
+
+  /* maps */
+
   @Data
   public static class Server {
 
-    Integer stompPort;
-
     /**
-     * ActiveMQ server hostname.
+     * ActiveMQ Server port
      */
     Integer port;
 
     /**
-     * ActiveMQ server listening port.
+     * ActiveMQ Server host
      */
     String host;
   }
 
-  /**
-   * ActiveMQ url.
-   */
-  String url;
+  @Data
+  public static class Stomp {
 
-  String stompUrl;
+    /**
+     * ActiveMQ STOMP host
+     */
+    String host;
+
+    /**
+     * ActiveMQ STOMP port
+     */
+    Port port;
+
+    /**
+     * ActiveMQ STOMP URL
+     */
+    Url url;
+
+    String endpoint;
+    String sendPath;
+    String subscription;
+
+    @Data
+    public static class Port {
+
+      /**
+       * ActiveMQ STOMP TCP port
+       */
+      Integer tcp;
+
+      /**
+       * ActiveMQ STOMP WebSocket port
+       */
+      Integer ws;
+    }
+
+    @Data
+    public static class Url {
+
+      /**
+       * ActiveMQ STOMP TCP URL
+       */
+      String tcp;
+
+      /**
+       * ActiveMQ STOMP WebSocket URL
+       */
+      String ws;
+    }
+  }
 }

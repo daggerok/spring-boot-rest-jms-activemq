@@ -4,6 +4,7 @@ import java.nio.file.Paths
 buildscript {
   ext {
     springBootVersion = "1.5.7.RELEASE"
+    springCloudVersion = "Dalston.SR3"
   }
 }
 
@@ -29,6 +30,11 @@ repositories {
 }
 
 dependencies {
+  compile("org.springframework.boot:spring-boot-starter-websocket")
+  compile "org.springframework.cloud:spring-cloud-stream-reactive",
+      "io.netty:netty-all:4.1.2.Final",
+      "io.projectreactor:reactor-net"
+
   compile("org.springframework.boot:spring-boot-starter-mustache")
 
   compile("org.springframework.boot:spring-boot-starter-activemq")
@@ -43,7 +49,6 @@ dependencies {
   compile("com.querydsl:querydsl-jpa")
 
   compile("org.projectlombok:lombok")
-
 //  compile("org.webjars:EventSource:0.0.9")
 //  compile("org.webjars.npm:eventsource:0.1.6")
 
@@ -55,7 +60,6 @@ dependencies {
   optional("org.springframework.boot:spring-boot-configuration-processor")
 
   runtime("org.springframework.boot:spring-boot-devtools")
-  //compile("org.postgresql:postgresql:9.4.1207")
   runtime("org.postgresql:postgresql")
 
   testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -72,13 +76,7 @@ clean {
 node {
   version = "6.9.2"
   npmVersion = "3.10.9"
-  //// Version of Yarn to use.
-  //yarnVersion = "v0.24.6"
-  // Base URL for fetching node distributions (change if you have a mirror).
   distBaseUrl = "https://nodejs.org/dist"
-  //// If true, it will download node using above parameters.
-  //// If false, it will try to use globally installed node.
-  //// https://github.com/srs/gradle-node-plugin/issues/171
   download = true
   workDir = file("$buildDir/nodejs")
   npmWorkDir = file("$buildDir/npm")
@@ -92,6 +90,7 @@ processResources { dependsOn npm_run_build }
 // spring dependency management plugin
 dependencyManagement {
   imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
     mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
   }
 }

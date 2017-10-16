@@ -11,6 +11,7 @@
 <script>
   (function main() {
     'use strict';
+
     function render(app, html) {
       const fragment = document.createDocumentFragment();
       const el = document.createElement('div');
@@ -19,81 +20,38 @@
       app.insertBefore(fragment, app.firstChild);
     }
 
-    const subscriptionsInfoTemplate = {
-      topic: 'jms.topic.name',
-      cb: payload => console.log('subscription payload:', payload),
-      unsubscribe: null,
-    };
-
     const STATE = {
-      subscriptionsInfo: [],
-      endpoint: '/ws',
       ws: null,
       stompClient: null,
       connected: false,
+      stomp: {
+        endpoint: null,
+        sendPath: null,
+        subscription: null,
+      },
     };
 
-    function initSubscriptionInfo(subscriptionInfo) {
-      STATE.subscriptionsInfo = subscriptionInfo || [];
-      return STATE.subscriptionsInfo;
+    function connect(subscribe, hello, onDisconnect) {
+      STATE.ws = new SockJS(STATE.stomp.endpoint || '/stomp-ws-endpoint');
+      STATE.stompClient = Stomp.over(STATE.ws);
+      STATE.stompClient.connect(
+        {},
+        frame => {
+          if (subscribe) STATE.stompClient.subscribe(STATE.stomp.subscription, subscribe);
+          if (hello) STATE.stompClient.send(STATE.stomp.sendPath, {}, JSON.stringify(hello));
+          STATE.connected = true;
+        },
+        _ => disconnect(onDisconnect)
+      );
     }
 
-    function addToSubscriptionInfo(subscriptionInfo) {
-      if (!STATE.subscriptionsInfo) initSubscriptionInfo();
-      if (!subscriptionInfo) return STATE.subscriptionsInfo;
-      if (!subscriptionInfo.length) STATE.subscriptionsInfo.push(subscriptionInfo);
-      else STATE.subscriptionsInfo.concat(subscriptionInfo);
-      return STATE.subscriptionsInfo;
-    }
-
-    function ws(endpoint) {
-      console.log('on ws', endpoint);
-      STATE.ws = SockJS(endpoint || STATE.endpoint);
-      return STATE.ws;
-    }
-
-    function stompClient(ws) {
-      console.log('on stompClient', ws);
-      STATE.stompClient = Stomp.over(ws || STATE.ws);
-      return STATE.stompClient;
-    }
-
-    function onConnect(frame) {
-      console.log('on connect', frame);
-      STATE.connected = true;
-      if (STATE.subscriptionsInfo && STATE.subscriptionsInfo.length) {
-        STATE.subscriptionsInfo.forEach(s => {
-          console.log('subscribing', s);
-          s.unsubscribe = STATE.stompClient.subscribe(s.topic, s.cb);
-          console.log('topic', s.topic, 'subscribed. unsubscriber register as', s.unsubscribe);
-        });
-      }
-    }
-
-    function onDisconnect(message) {
-      console.log('on disconnect', message);
-      STATE.stompClient = null;
-      STATE.ws = null;
-      //STATE.subscriptionsInfo = [];
-    }
-    
-    function connect() {
-      if (!STATE.ws)
-        STATE.ws = ws(STATE.endpoint);
-      if (!STATE.stompClient)
-        STATE.stompClient = stompClient(STATE.ws);
-      if (STATE.stompClient && STATE.stompClient.connect)
-        STATE.stompClient.connect({ user: 'anon' }, onConnect, onDisconnect);
-    }
-
-    function disconnect() {
-      if (!!STATE.stompClient) STATE.stompClient.disconnect();
+    function disconnect(cb) {
+      if (STATE.stompClient) STATE.stompClient.disconnect();
+      if (cb) cb();
+      STATE.connected = false;
     }
 
     const APP = {
-      addToSubscriptionInfo,
-      ws,
-      stompClient,
       connect,
       disconnect,
     };
@@ -101,15 +59,19 @@
     document.addEventListener('DOMContentLoaded', () => {
       const app = document.querySelector('#app');
       render(app, `<p>hi</p>`);
-      fetch("/api/v1/stomp-url").then(resp => resp.json())
-                                .then(config => STATE.endpoint = config['stomp-url'])
-                                .then(json => render(app, `
-                                  <div>
-                                    stomp url: ${STATE.endpoint}
-                                  </div>
-                                `))
-                                .then(_ => console.log('TODO...'))
-      ;
+      fetch("/api/v1/stomp").then(resp => resp.json())
+                                .then(stomp => STATE.stomp = stomp)
+                                .then(doStompStuff);
+      function doStompStuff() {
+        const subscribe = message => {
+          const body = message.body;
+          render(app, `<code>${body}</code>`)
+        };
+        const message = { body: 'hi, I\'m here!' };
+        const onDisconnect = () => console.log('bye..');
+
+        APP.connect(subscribe, message, onDisconnect);
+      }
     })
   })();
 </script>
