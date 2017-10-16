@@ -13,3 +13,5 @@ db:
   server:
     host: ${DB_HOST:localhost}
     port: ${DB_PORT:5432}
+stomp:
+  url: /ws

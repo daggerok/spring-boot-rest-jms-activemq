@@ -22,7 +22,7 @@
     const subscriptionsInfoTemplate = {
       topic: 'jms.topic.name',
       cb: payload => console.log('subscription payload:', payload),
-      unsubscribe: null
+      unsubscribe: null,
     };
 
     const STATE = {
@@ -42,7 +42,7 @@
       if (!STATE.subscriptionsInfo) initSubscriptionInfo();
       if (!subscriptionInfo) return STATE.subscriptionsInfo;
       if (!subscriptionInfo.length) STATE.subscriptionsInfo.push(subscriptionInfo);
-      else STATE.subscriptionsInfo = [...STATE.subscriptionsInfo, ...subscriptionInfo];
+      else STATE.subscriptionsInfo.concat(subscriptionInfo);
       return STATE.subscriptionsInfo;
     }
 

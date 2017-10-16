@@ -6,38 +6,38 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "mq")
-public class MessageQueueProperties {
+@ConfigurationProperties(prefix = "db")
+public class DatabaseProperties {
 
   /**
-   * ActiveMQ writer broker user
+   * Database name.
+   */
+  String name;
+
+  /**
+   * Database user username.
    */
   String user;
 
   /**
-   * ActiveMQ writer broker password
+   * Database user password.
    */
-  String password;
+  String pass;
 
   /**
-   * ActiveMQ server.
+   * Database server.
    */
   @Data
   public static class Server {
 
     /**
-     * ActiveMQ server hostname.
+     * Database server hostname.
      */
     Integer port;
 
     /**
-     * ActiveMQ server listening port.
+     * Database server listening port.
      */
     String host;
   }
-
-  /**
-   * ActiveMQ url.
-   */
-  String url;
 }
