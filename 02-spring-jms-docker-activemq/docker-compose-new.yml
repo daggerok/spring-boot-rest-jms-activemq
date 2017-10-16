@@ -1,0 +1,59 @@
+version: "2.1"
+
+services:
+
+  activemq:
+    container_name: activemq
+    image: rmohr/activemq:5.14.5-alpine
+    networks: [backing-services]
+    ports:
+      # ui
+      - "8161:8161"
+      # amqp
+      - "5672:5672"
+      # stomp
+      - "61613:61613"
+      # ws
+      - "61614:61614"
+      # mqtt
+      - "1883:1883"
+      # jms
+      - "61616:61616"
+    volumes:
+      - "activemq-data:/etc/activemq/conf"
+      - "activemq-data:/var/lib/activemq/data"
+      - "activemq-data:/opt/activemq/conf"
+      - "activemq-data:/opt/activemq/data"
+#    environment:
+#      ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: "true"
+#      ACTIVEMQ_ADMIN_LOGIN: admin
+#      ACTIVEMQ_ADMIN_PASSWORD: password
+#      ACTIVEMQ_WRITE_LOGIN: write
+#      ACTIVEMQ_WRITE_PASSWORD: password
+#      ACTIVEMQ_READ_LOGIN: read
+#      ACTIVEMQ_READ_PASSWORD: password
+#      ACTIVEMQ_JMX_LOGIN: jmx
+#      ACTIVEMQ_JMX_PASSWORD: password
+#      ACTIVEMQ_STATIC_TOPICS: static-topic-1;static-topic-2
+#      ACTIVEMQ_STATIC_QUEUES: static-queue-1;static-queue-2
+#      ACTIVEMQ_ENABLED_SCHEDULER: "true"
+#      ACTIVEMQ_MIN_MEMORY: 512
+#      ACTIVEMQ_MAX_MEMORY: 2048
+
+  postgres:
+    image: healthcheck/postgres:alpine
+    ports: ["5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    networks: [backing-services]
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+volumes:
+  activemq-data: {}
+  postgres-data: {}
+
+networks:
+  backing-services:
+    driver: bridge

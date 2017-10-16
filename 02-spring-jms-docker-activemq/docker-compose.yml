@@ -1,11 +1,24 @@
 version: "2.1"
+
 services:
-  mq:
-    container_name: activemq
+
+  activemq:
     image: webcenter/activemq:5.14.3
-    ports: ["8161:8161", "61613:61613", "61616:61616"]
+    ports:
+      # mqtt
+      - "1883:1883"
+      # amqp
+      - "5672:5672"
+      # ui
+      - "8161:8161"
+      # stomp
+      - "61613:61613"
+      # ws
+      - "61614:61614"
+      # jms
+      - "61616:61616"
     networks: [backing-services]
-    volumes: ["mq-data:/data/activemq", "mq-data:/var/log/activemq"]
+    volumes: ["activemq-data:/opt/activemq/conf", "activemq-data:/data/activemq", "activemq-data:/var/log/activemq"]
     environment:
       ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: "true"
       ACTIVEMQ_ADMIN_LOGIN: admin
@@ -21,19 +34,21 @@ services:
       ACTIVEMQ_ENABLED_SCHEDULER: "true"
       ACTIVEMQ_MIN_MEMORY: 512
       ACTIVEMQ_MAX_MEMORY: 2048
-  db:
-    container_name: postgres
+
+  postgres:
     image: healthcheck/postgres:alpine
     ports: ["5432:5432"]
     networks: [backing-services]
-    volumes: ["db-data:/var/lib/postgresql/data"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
     environment:
       POSTGRES_DB: db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+
 volumes:
-  mq-data: {}
-  db-data: {}
+  activemq-data: {}
+  postgres-data: {}
+
 networks:
   backing-services:
     driver: bridge

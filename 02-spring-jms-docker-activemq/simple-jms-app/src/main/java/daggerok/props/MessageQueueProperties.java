@@ -25,6 +25,8 @@ public class MessageQueueProperties {
   @Data
   public static class Server {
 
+    Integer stompPort;
+
     /**
      * ActiveMQ server hostname.
      */
@@ -40,4 +42,6 @@ public class MessageQueueProperties {
    * ActiveMQ url.
    */
   String url;
+
+  String stompUrl;
 }

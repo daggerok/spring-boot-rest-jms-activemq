@@ -2,7 +2,9 @@
 
 
 ```bash
+bash gradlew -b ../build.gradle composeUp
 bash gradlew clean build
+bash gradlew -b ../build.gradle composeDown
 ```
 
 **gradle wrapper**

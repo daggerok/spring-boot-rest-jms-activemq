@@ -4,6 +4,7 @@ mq:
   server:
     host: ${MQ_HOST:localhost}
     port: ${MQ_PORT:61616}
+    stomp-port: 61613
   url: tcp://${mq.server.host}:${mq.server.port}
 db:
   name: ${DB_NAME:db}
@@ -12,3 +13,5 @@ db:
   server:
     host: ${DB_HOST:localhost}
     port: ${DB_PORT:5432}
+stomp:
+  url: /ws

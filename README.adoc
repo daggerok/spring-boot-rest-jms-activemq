@@ -4,3 +4,7 @@ This repository contains some activemq examples
 
 . link:01-spring-boot-rest-jms-activemq/[spring-boot jms activemq]
 . link:02-spring-boot-rest-jms-activemq/[spring-jms docker activemq]
+
+resources:
+
+. https://dzone.com/articles/easy-messaging-stomp-over

@@ -18,7 +18,7 @@ public class MessageConsumer {
   final MessageRestRepository messageRepository;
 
   @Transactional
-  @JmsListener(destination = "message-topic")
+  @JmsListener(destination = "jms.topic.message")
   public void receive(final Message message) {
     val result = messageRepository.save(message);
     log.info("consumed: {}", result);
