@@ -37,14 +37,14 @@ before_install:
 script:
   - export root=$PWD
 
-  # spring-boot-rest-jms-activemq
-  - cd $root/spring-boot-rest-jms-activemq
-  - bash mvnw clean install
-  - bash gradlew clean build
-
-  # spring-jms-docker-activemq
-  - cd $root/spring-jms-docker-activemq
-  - bash gradlew clean build
+#  # spring-boot-rest-jms-activemq
+#  - cd $root/spring-boot-rest-jms-activemq
+#  - bash mvnw clean install
+#  - bash gradlew clean build
+#
+#  # spring-jms-docker-activemq
+#  - cd $root/spring-jms-docker-activemq
+#  - bash gradlew clean build
 
   # activemq-spring-stomp
   - cd $root/activemq-spring-stomp
