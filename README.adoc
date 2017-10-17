@@ -4,7 +4,7 @@ This repository contains some activemq examples
 
 . link:spring-boot-rest-jms-activemq/[spring-boot jms activemq]
 . link:spring-boot-rest-jms-activemq/[spring-jms docker activemq]
-. link:03-activemq-spring-stomp/[activemq spring stomp]
+. link:activemq-spring-stomp/[activemq spring stomp]
 
 resources:
 

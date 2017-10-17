@@ -48,7 +48,7 @@ script:
   - bash gradlew clean build
 
   # activemq-spring-stomp
-  - cd $root/03-activemq-spring-stomp
+  - cd $root/activemq-spring-stomp
   - bash gradlew clean integrationTests build
 
 before_cache:
