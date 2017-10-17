@@ -65,19 +65,20 @@ services:
     volumes: ["messaging-frontend-admin-data:/home/app"]
     networks: [backing-services]
 
-#  messaging-frontend-client:
-#    build:
-#      context: ../..
-#      dockerfile: ./docker/src/messaging-frontend-client/Dockerfile
-#    depends_on:
-#      messaging-backend:
-#        condition: service_healthy
-#    environment:
-#      MESSAGING_SERVICE_HOST: 127.0.0.1
-#    image: 127.0.0.1:5000/messaging-frontend-client
-#    ports: ["8001:8001"]
-#    volumes: ["messaging-frontend-client-data:/home/app"]
-#    networks: [backing-services]
+  messaging-frontend-client:
+    build:
+      context: ../..
+      dockerfile: ./docker/src/messaging-frontend-client/Dockerfile
+    depends_on:
+      messaging-backend:
+        condition: service_healthy
+    environment:
+      MESSAGING_SERVICE_HOST: 127.0.0.1
+#      MESSAGING_SERVICE_HOST: messaging-backend
+    image: 127.0.0.1:5000/messaging-frontend-client
+    ports: ["8001:8001"]
+    volumes: ["messaging-frontend-client-data:/home/app"]
+    networks: [backing-services]
 
 volumes:
   activemq-data: {}
