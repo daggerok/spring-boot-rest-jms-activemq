@@ -38,7 +38,7 @@ script:
   - export root=$PWD
 
   # spring-boot-rest-jms-activemq
-  - cd $root/01-spring-boot-rest-jms-activemq
+  - cd $root/spring-boot-rest-jms-activemq
   - bash mvnw clean install
   - bash gradlew clean build
 
