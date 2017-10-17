@@ -6,5 +6,4 @@ spring:
       props,
       mq-config,
       db-config,
-      rest-config,
-      web-config
+      rest-config

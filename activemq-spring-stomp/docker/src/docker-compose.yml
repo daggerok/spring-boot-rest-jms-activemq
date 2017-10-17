@@ -1,0 +1,91 @@
+version: "2.1"
+
+services:
+
+  activemq:
+    image: webcenter/activemq:5.14.3
+    ports:
+      - "1883:1883"   # mqtt
+      - "5672:5672"   # amqp
+      - "8161:8161"   # ui
+      - "61613:61613" # stomp
+      - "61614:61614" # ws
+      - "61616:61616" # jms
+    networks: [backing-services]
+    volumes:
+      - "activemq-data:/opt/activemq/conf"
+      - "activemq-data:/data/activemq"
+      - "activemq-data:/var/log/activemq"
+    environment:
+      ACTIVEMQ_MIN_MEMORY: 512
+      ACTIVEMQ_MAX_MEMORY: 2048
+      ACTIVEMQ_ENABLED_SCHEDULER: "true"
+      ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: "true"
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: password
+
+  postgres:
+    depends_on: [activemq]
+    image: healthcheck/postgres:alpine
+    ports: ["5432:5432"]
+    networks: [backing-services]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+  messaging-backend:
+    build:
+      context: ../..
+      dockerfile: ./docker/src/messaging-backend/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MQ_HOST: activemq
+      DB_HOST: postgres
+    image: 127.0.0.1:5000/messaging-backend
+    ports: ["8080:8080"]
+    volumes: ["messaging-backend-data:/home/app"]
+    networks: [backing-services]
+
+  messaging-frontend-admin:
+    build:
+      context: ../..
+      dockerfile: ./docker/src/messaging-frontend-admin/Dockerfile
+    depends_on:
+      messaging-backend:
+        condition: service_healthy
+    environment:
+      MESSAGING_SERVICE_HOST: 127.0.0.1
+#      MESSAGING_SERVICE_HOST: messaging-backend
+    image: 127.0.0.1:5000/messaging-frontend-admin
+    ports: ["8002:8002"]
+    volumes: ["messaging-frontend-admin-data:/home/app"]
+    networks: [backing-services]
+
+#  messaging-frontend-client:
+#    build:
+#      context: ../..
+#      dockerfile: ./docker/src/messaging-frontend-client/Dockerfile
+#    depends_on:
+#      messaging-backend:
+#        condition: service_healthy
+#    environment:
+#      MESSAGING_SERVICE_HOST: 127.0.0.1
+#    image: 127.0.0.1:5000/messaging-frontend-client
+#    ports: ["8001:8001"]
+#    volumes: ["messaging-frontend-client-data:/home/app"]
+#    networks: [backing-services]
+
+volumes:
+  activemq-data: {}
+  postgres-data: {}
+  messaging-backend-data: {}
+  messaging-frontend-admin-data: {}
+  messaging-frontend-client-data: {}
+
+networks:
+  backing-services:
+    driver: bridge

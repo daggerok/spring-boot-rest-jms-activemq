@@ -44,12 +44,14 @@ script:
 
   # spring-jms-docker-activemq
   - cd $root/spring-jms-docker-activemq
-  - bash gradlew clean integrationTests
   - bash gradlew clean build
 
   # activemq-spring-stomp
   - cd $root/activemq-spring-stomp
-  - bash gradlew clean integrationTests build
+  - bash gradlew clean build
+  - bash gradlew dockerUp
+  - http :8080/api/messages
+  - bash gradlew dockerDown
 
 before_cache:
   - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock

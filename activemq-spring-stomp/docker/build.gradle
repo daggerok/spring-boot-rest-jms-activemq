@@ -4,7 +4,7 @@ plugins {
 }
 
 dockerCompose {
-  useComposeFiles = ["$projectDir/docker-compose.yml"]
+  useComposeFiles = ["$projectDir/src/docker-compose.yml"]
   captureContainersOutput = true
   stopContainers = true
   removeContainers = true

@@ -1,40 +1,9 @@
-plugins {
-  id "com.avast.gradle.docker-compose" version "0.3.21"
-}
-
-dockerCompose {
-  useComposeFiles = ["$projectDir/docker-compose.yml"]
-  captureContainersOutput = true
-  stopContainers = true
-  removeContainers = true
-  removeImages = "Local"
-  removeVolumes = true
-  projectName = "$rootProject.name"
-}
-
 ["clean", "assemble", "test", "build"].each { taskName ->
   tasks.create(taskName) { task ->
     gradle.includedBuilds.each { build ->
+      if (build.name == "docker") return
       dependsOn gradle.includedBuild(build.name).task(":$taskName")
     }
-  }
-}
-
-["test", "build"].each {
-  def task = tasks.findByName it
-  task.shouldRunAfter clean, assemble, composeUp
-  task.dependsOn assemble, composeUp
-  task.finalizedBy composeDown
-}
-
-task integrationTests(dependsOn: "test")
-
-// bootRun -> run-$projectName
-gradle.includedBuilds.each { build ->
-  tasks.create("run-$build.name") { task ->
-    dependsOn assemble, composeUp, gradle.includedBuild(build.name).task(":bootRun")
-    shouldRunAfter clean, assemble, composeUp
-    finalizedBy composeDown
   }
 }
 
@@ -43,5 +12,13 @@ gradle.includedBuilds.each { build ->
     tasks.create(taskName) { task ->
       dependsOn gradle.includedBuild(build.name).task(":$taskName")
     }
+  }
+}
+
+// bootRun -> run-$projectName
+gradle.includedBuilds.each { build ->
+  tasks.create("run-$build.name") { task ->
+    dependsOn assemble, gradle.includedBuild(build.name).task(":bootRun")
+    shouldRunAfter clean, assemble
   }
 }

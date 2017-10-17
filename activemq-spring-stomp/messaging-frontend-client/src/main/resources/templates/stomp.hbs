@@ -84,7 +84,7 @@
         APP.connect(subscribe, message, onDisconnect);
       }
 
-      document.querySelector('#input').addEventListener('keyup', e => {
+      document.querySelector('#input').addEventListener('keypress', e => {
         if (e.keyCode !== 13 || !e.target.value.trim().length) return;
         APP.sendMessage(e.target.value);
         e.target.value = '';

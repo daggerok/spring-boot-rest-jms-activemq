@@ -14,6 +14,7 @@ plugins {
   id "cn.bestwu.propdeps-eclipse" version "0.0.10"
   id "com.github.ben-manes.versions" version "0.14.0"
   id "org.springframework.boot" version "1.5.7.RELEASE"
+  id "com.avast.gradle.docker-compose" version "0.3.21"
   id "com.ewerk.gradle.plugins.querydsl" version "1.0.8"
   id "io.spring.dependency-management" version "1.0.3.RELEASE"
 }
@@ -33,6 +34,7 @@ dependencies {
       "io.projectreactor:reactor-net"
 
   compile("org.springframework.boot:spring-boot-starter-mustache")
+  compile("org.springframework.boot:spring-boot-starter-actuator")
 
   compile("org.springframework.boot:spring-boot-starter-activemq")
 
@@ -78,4 +80,20 @@ sourceSets {
 
 clean {
   delete "$projectDir/out"
+}
+
+dockerCompose {
+  useComposeFiles = ["$projectDir/docker-compose.yml"]
+  captureContainersOutput = true
+  stopContainers = true
+  removeContainers = true
+  removeImages = "Local"
+  removeVolumes = true
+  projectName = "$rootProject.name"
+}
+
+[test, build, bootRun].each {
+  it.shouldRunAfter clean, assemble, composeUp
+  it.dependsOn assemble, composeUp
+  it.finalizedBy composeDown
 }

@@ -51,7 +51,7 @@
       rest.get('/api/messages?sort=modifiedDate,desc&size=1000', 'messages')
           .then(messages => messages.forEach(message => render(app, message.body)))
 
-      document.querySelector('#input').addEventListener('keyup', e => {
+      document.querySelector('#input').addEventListener('keypress', e => {
         if (e.keyCode !== 13 || !e.target.value.trim().length) return;
         rest.post('/api/v1/messages', { body: e.target.value }).then(_ => render(app, e.target.value))
             .then(_ => e.target.value = '');

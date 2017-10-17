@@ -27,8 +27,6 @@ dockerCompose {
   task.finalizedBy composeDown
 }
 
-task integrationTests(dependsOn: "test")
-
 // bootRun -> run-$projectName
 gradle.includedBuilds.each { build ->
   tasks.create("run-$build.name") { task ->
