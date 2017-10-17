@@ -24,10 +24,9 @@ repositories {
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-mustache",
-
             "org.projectlombok:lombok",
-            "org.webjars:EventSource:0.0.9",
-            "org.webjars.npm:eventsource:0.1.6",
+//            "org.webjars:EventSource:0.0.9",
+//            "org.webjars.npm:eventsource:0.1.6",
             "org.webjars:webjars-locator",
             "org.webjars:sockjs-client:1.0.2",
             "org.webjars:stomp-websocket:2.3.3",
