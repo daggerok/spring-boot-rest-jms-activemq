@@ -26,7 +26,12 @@ before_install:
   - sudo apt install -y python-pip
   - sudo pip install docker-compose
   - sudo usermod -aG docker $(whoami)
+  - sudo kill $(sudo lsof -t -i:1883) | true
   - sudo kill $(sudo lsof -t -i:5432) | true
+  - sudo kill $(sudo lsof -t -i:5672) | true
+  - sudo kill $(sudo lsof -t -i:8161) | true
+  - sudo kill $(sudo lsof -t -i:61613) | true
+  - sudo kill $(sudo lsof -t -i:61614) | true
   - sudo kill $(sudo lsof -t -i:61616) | true
 
 script:
@@ -36,15 +41,15 @@ script:
   - cd $root/01-spring-boot-rest-jms-activemq
   - bash mvnw clean install
   - bash gradlew clean build
-
-  # spring-jms-docker-activemq
-  - cd $root/02-spring-jms-docker-activemq
-  - bash gradlew clean integrationTests
-  - bash gradlew clean build
-
-  # activemq-spring-stomp
-  - cd $root/03-activemq-spring-stomp
-  - bash gradlew clean integrationTests build
+#
+#  # spring-jms-docker-activemq
+#  - cd $root/02-spring-jms-docker-activemq
+#  - bash gradlew clean integrationTests
+#  - bash gradlew clean build
+#
+#  # activemq-spring-stomp
+#  - cd $root/03-activemq-spring-stomp
+#  - bash gradlew clean integrationTests build
 
 before_cache:
   - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock
