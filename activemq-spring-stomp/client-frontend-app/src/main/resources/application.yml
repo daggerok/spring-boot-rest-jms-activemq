@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: simple-jms-app
+  profiles:
+    include: >
+      props,
+      mq-config,
+      db-config,
+      rest-config,
+      web-config

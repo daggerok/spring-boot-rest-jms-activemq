@@ -1,0 +1,25 @@
+mq:
+  user: ${MQ_USER:admin}
+  pass: ${MQ_PASSWORD:password}
+  url: tcp://${mq.server.host}:${mq.server.port}
+  server:
+    host: ${MQ_HOST:127.0.0.1}
+    port: ${MQ_JMS_PORT:${MQ_PORT:61616}}
+  stomp:
+    endpoint: /stomp-ws-endpoint
+    send-path: /app/send-message
+    subscription: /topic/messages
+    host: ${MQ_HOST:127.0.0.1}
+    port:
+      tcp: ${MQ_STOMP_TCP_PORT:61613}
+      ws: ${MQ_STOMP_WS_PORT:61614}
+    url:
+      tcp: tcp://${mq.stomp.host}:${mq.stomp.port.tcp}
+      ws: ws://${mq.stomp.host}:${mq.stomp.port.ws}
+db:
+  name: ${DB_NAME:db}
+  user: ${DB_USER:user}
+  pass: ${DB_PASSWORD:password}
+  server:
+    host: ${DB_HOST:localhost}
+    port: ${DB_PORT:5432}

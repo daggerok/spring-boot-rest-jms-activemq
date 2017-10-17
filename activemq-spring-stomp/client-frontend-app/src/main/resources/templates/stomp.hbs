@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stomp ActivMQ</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+<script>
+  (function main() {
+    'use strict';
+
+    function render(app, html) {
+      const fragment = document.createDocumentFragment();
+      const el = document.createElement('div');
+      el.innerHTML = html;
+      fragment.appendChild(el);
+      app.insertBefore(fragment, app.firstChild);
+    }
+
+    const STATE = {
+      ws: null,
+      stompClient: null,
+      connected: false,
+      stomp: {
+        endpoint: null,
+        sendPath: null,
+        subscription: null,
+      },
+    };
+
+    function connect(subscribe, hello, onDisconnect) {
+      STATE.ws = new SockJS(STATE.stomp.endpoint || '/stomp-ws-endpoint');
+      STATE.stompClient = Stomp.over(STATE.ws);
+      STATE.stompClient.connect(
+        {},
+        frame => {
+          if (subscribe) STATE.stompClient.subscribe(STATE.stomp.subscription, subscribe);
+          if (hello) STATE.stompClient.send(STATE.stomp.sendPath, {}, JSON.stringify(hello));
+          STATE.connected = true;
+        },
+        _ => disconnect(onDisconnect)
+      );
+    }
+
+    function disconnect(cb) {
+      if (STATE.stompClient) STATE.stompClient.disconnect();
+      if (cb) cb();
+      STATE.connected = false;
+    }
+
+    const APP = {
+      connect,
+      disconnect,
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = document.querySelector('#app');
+      render(app, `<p>hi</p>`);
+      fetch("/api/v1/stomp").then(resp => resp.json())
+                                .then(stomp => STATE.stomp = stomp)
+                                .then(doStompStuff);
+      function doStompStuff() {
+        const subscribe = message => {
+          const body = message.body;
+          render(app, `<code>${body}</code>`)
+        };
+        const message = { body: 'hi, I\'m here!' };
+        const onDisconnect = () => console.log('bye..');
+
+        APP.connect(subscribe, message, onDisconnect);
+      }
+    })
+  })();
+</script>
+</body>
+</html>
