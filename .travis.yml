@@ -47,9 +47,9 @@ script:
   - bash gradlew clean integrationTests
   - bash gradlew clean build
 
-#  # activemq-spring-stomp
-#  - cd $root/03-activemq-spring-stomp
-#  - bash gradlew clean integrationTests build
+  # activemq-spring-stomp
+  - cd $root/03-activemq-spring-stomp
+  - bash gradlew clean integrationTests build
 
 before_cache:
   - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock
