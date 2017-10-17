@@ -1,0 +1,7 @@
+spring:
+  mustache:
+    prefix: classpath:/templates/
+    suffix: .hbs
+  resources:
+    chain:
+      enabled: true

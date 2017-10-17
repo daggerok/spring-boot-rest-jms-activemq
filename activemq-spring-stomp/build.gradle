@@ -37,3 +37,11 @@ gradle.includedBuilds.each { build ->
     finalizedBy composeDown
   }
 }
+
+["dockerUp", "dockerDown"].each { taskName ->
+  gradle.includedBuilds.findAll({ it.name == "docker" }).each { build ->
+    tasks.create(taskName) { task ->
+      dependsOn gradle.includedBuild(build.name).task(":$taskName")
+    }
+  }
+}

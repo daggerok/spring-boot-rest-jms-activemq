@@ -1,0 +1,10 @@
+messaging:
+  service:
+    schema: http
+    host: ${MESSAGING_SERVICE_HOST:127.0.0.1}
+    port: ${MESSAGING_SERVICE_PORT:8080}
+    url: ${messaging.service.schema}://${messaging.service.host}:${messaging.service.port}
+    stomp:
+      endpoint: ${messaging.service.url}/stomp
+      send-path: /app/send-message
+      subscription: /topic/messages

@@ -1,6 +1,0 @@
-spring:
-  activemq:
-    user: ${mq.user}
-    password: ${mq.pass}
-    in-memory: false
-    broker-url: ${mq.url}

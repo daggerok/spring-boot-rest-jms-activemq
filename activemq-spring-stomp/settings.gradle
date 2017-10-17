@@ -1,2 +1,5 @@
 rootProject.name = "spring-jms-docker-activemq"
-includeBuild "simple-jms-app"
+includeBuild "messaging-backend"
+includeBuild "messaging-frontend-client"
+includeBuild "messaging-frontend-admin"
+includeBuild "docker"

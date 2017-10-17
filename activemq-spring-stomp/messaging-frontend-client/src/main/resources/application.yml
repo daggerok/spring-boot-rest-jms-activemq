@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: simple-jms-app
+  profiles:
+    include: >
+      server,
+      messaging,
+      web-config

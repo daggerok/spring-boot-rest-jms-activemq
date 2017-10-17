@@ -1,0 +1,17 @@
+plugins {
+  id "base"
+  id "com.avast.gradle.docker-compose" version "0.3.21"
+}
+
+dockerCompose {
+  useComposeFiles = ["$projectDir/docker-compose.yml"]
+  captureContainersOutput = true
+  stopContainers = true
+  removeContainers = true
+  removeImages = "Local"
+  removeVolumes = true
+  projectName = "$rootProject.name"
+}
+
+task dockerUp(dependsOn: composeUp)
+task dockerDown(dependsOn: composeDown)

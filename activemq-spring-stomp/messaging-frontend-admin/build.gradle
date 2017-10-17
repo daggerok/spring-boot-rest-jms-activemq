@@ -1,0 +1,43 @@
+buildscript {
+    ext {
+        springBootVersion = "1.5.7.RELEASE"
+    }
+}
+
+plugins {
+    id "java"
+    id "cn.bestwu.propdeps" version "0.0.10"
+    id "cn.bestwu.propdeps-idea" version "0.0.10"
+    id "cn.bestwu.propdeps-maven" version "0.0.10"
+    id "cn.bestwu.propdeps-eclipse" version "0.0.10"
+    id "org.springframework.boot" version "1.5.7.RELEASE"
+    id "io.spring.dependency-management" version "1.0.3.RELEASE"
+}
+
+version = "0.0.1"
+sourceCompatibility = sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-mustache",
+            "org.projectlombok:lombok",
+            "org.webjars.npm:types__whatwg-fetch:0.0.33"
+
+    optional("org.springframework.boot:spring-boot-configuration-processor")
+
+    runtime("org.springframework.boot:spring-boot-devtools")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
+    }
+}
+
+clean {
+    delete "$projectDir/out"
+}

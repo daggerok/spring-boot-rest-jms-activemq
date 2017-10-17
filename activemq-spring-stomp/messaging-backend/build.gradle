@@ -1,0 +1,81 @@
+buildscript {
+  ext {
+    springBootVersion = "1.5.7.RELEASE"
+    springCloudVersion = "Dalston.SR3"
+  }
+}
+
+plugins {
+  id "java"
+  id "idea"
+  id "cn.bestwu.propdeps" version "0.0.10"
+  id "cn.bestwu.propdeps-idea" version "0.0.10"
+  id "cn.bestwu.propdeps-maven" version "0.0.10"
+  id "cn.bestwu.propdeps-eclipse" version "0.0.10"
+  id "com.github.ben-manes.versions" version "0.14.0"
+  id "org.springframework.boot" version "1.5.7.RELEASE"
+  id "com.ewerk.gradle.plugins.querydsl" version "1.0.8"
+  id "io.spring.dependency-management" version "1.0.3.RELEASE"
+}
+
+version = "0.0.1"
+sourceCompatibility = sourceCompatibility = 1.8
+
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+dependencies {
+  compile("org.springframework.boot:spring-boot-starter-websocket")
+  compile "org.springframework.cloud:spring-cloud-stream-reactive",
+      "io.netty:netty-all:4.1.2.Final",
+      "io.projectreactor:reactor-net"
+
+  compile("org.springframework.boot:spring-boot-starter-mustache")
+
+  compile("org.springframework.boot:spring-boot-starter-activemq")
+
+  compile("org.springframework.boot:spring-boot-starter-data-jpa")
+  compile("org.springframework.boot:spring-boot-starter-data-rest")
+  compile("com.fasterxml.jackson.core:jackson-databind")
+
+  compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+  compile("org.hibernate:hibernate-java8")
+
+  compile("com.querydsl:querydsl-jpa")
+
+  compile("org.projectlombok:lombok")
+
+  optional("org.springframework.boot:spring-boot-configuration-processor")
+
+  runtime("org.springframework.boot:spring-boot-devtools")
+  runtime("org.postgresql:postgresql")
+
+  testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+// spring dependency management plugin
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
+  }
+}
+
+// querydsl plugin
+querydsl {
+  querydslSourcesDir = "src/main/gen"
+  querydslDefault = true
+  jpa = true
+}
+
+sourceSets {
+  generated
+  main
+  test
+}
+
+clean {
+  delete "$projectDir/out"
+}

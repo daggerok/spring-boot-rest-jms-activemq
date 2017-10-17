@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client | Stomp ActiveMQ</title>
+</head>
+<body>
+<input type="text" id="input"/>
+<div id="app"></div>
+<!--&lt;!&ndash;-->
+<script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+<!--&ndash;&gt;-->
+<!--<script src="/webjars/sockjs-client/1.0.2/sockjs.js"></script>-->
+<!--<script src="/webjars/stomp-websocket/2.3.3/stomp.js"></script>-->
+<script>
+  (function main() {
+    'use strict';
+
+    function render(app, text) {
+      const el = document.createElement('div');
+      el.textContent = text;
+      app.insertBefore(el, app.firstChild);
+    }
+
+    const STATE = {
+      ws: null,
+      stompClient: null,
+      connected: false,
+      stomp: {
+        endpoint: null,
+        sendPath: null,
+        subscription: null,
+      },
+    };
+
+    function sendMessage(body) {
+      STATE.stompClient.send(STATE.stomp.sendPath, {}, JSON.stringify({body}));
+    }
+
+    function connect(subscribe, body, onDisconnect) {
+      STATE.ws = new SockJS(STATE.stomp.endpoint);
+      STATE.stompClient = Stomp.over(STATE.ws);
+      STATE.stompClient.connect(
+          {},
+          frame => {
+            if (subscribe) STATE.stompClient.subscribe(STATE.stomp.subscription, subscribe);
+            if (hello) sendMessage(body);
+            STATE.connected = true;
+          },
+          _ => disconnect(onDisconnect)
+      );
+    }
+
+    function disconnect(cb) {
+      if (STATE.stompClient) STATE.stompClient.disconnect();
+      if (cb) cb();
+      STATE.connected = false;
+    }
+
+    const APP = {
+      sendMessage,
+      connect,
+      disconnect,
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const app = document.querySelector('#app');
+
+      fetch("/api/v1/stomp").then(resp => resp.json())
+          .then(stomp => STATE.stomp = stomp)
+          .then(doStompStuff);
+
+      function doStompStuff() {
+        const subscribe = message => {
+          const json = message.body;
+          const obj = JSON.parse(json);
+          render(app, obj.body)
+        };
+        const message = {body: 'hi, I\'m here!'};
+        const onDisconnect = () => console.log('bye..');
+
+        APP.connect(subscribe, message, onDisconnect);
+      }
+
+      document.querySelector('#input').addEventListener('keyup', e => {
+        if (e.keyCode !== 13 || !e.target.value.trim().length) return;
+        APP.sendMessage(e.target.value);
+        e.target.value = '';
+      }, false);
+
+    }, false);
+
+  })();
+</script>
+</body>
+</html>

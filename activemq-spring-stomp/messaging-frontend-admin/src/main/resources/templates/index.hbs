@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Stomp ActiveMQ</title>
+</head>
+<body>
+<input type="text" id="input">
+<div id="messages">
+</div>
+<script>
+  (function main() {
+    'use strict';
+
+    function render(app, message) {
+      const el = document.createElement('div');
+      el.textContent = message;
+      app.insertBefore(el, app.firstChild);
+    }
+
+    const getBaseUrl = () =>
+        fetch("/api/v1/config").then(resp => resp.json())
+            .then(service => service.url);
+
+    const rest = {
+      queryParams: (params = {}) => Object.keys(params)
+          .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+          .join('&'),
+      get: (path = "/api/messages", key) => getBaseUrl()
+          .then(baseUrl => fetch(baseUrl + path, {
+            accept: 'application/json',
+            mode: 'cors',
+            /* // use `mode: 'cors'` instead
+            headers: { 'Access-Control-Allow-Origin': '*' } */
+          }).then(data => data.json())
+              .then(json => json._embedded[key])),
+      post: (url = '/api/messages', message) => getBaseUrl()
+          .then(baseUrl => fetch(baseUrl + url, {
+            method: 'post',
+            mode: 'cors',
+            headers: { //'Access-Control-Allow-Origin': '*', // use `mode: 'cors'` instead
+              'Content-Type': 'application/json', },
+            body: JSON.stringify(message),
+          })),
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const app = document.querySelector('#messages');
+
+      rest.get('/api/messages?sort=modifiedDate,desc&size=1000', 'messages')
+          .then(messages => messages.forEach(message => render(app, message.body)))
+
+      document.querySelector('#input').addEventListener('keyup', e => {
+        if (e.keyCode !== 13 || !e.target.value.trim().length) return;
+        rest.post('/api/v1/messages', { body: e.target.value }).then(_ => render(app, e.target.value))
+            .then(_ => e.target.value = '');
+      }, false);
+
+    }, false);
+
+  })();
+</script>
+</body>
+</html>
