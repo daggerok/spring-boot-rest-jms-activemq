@@ -38,14 +38,14 @@
       STATE.stompClient.send(STATE.stomp.sendPath, {}, JSON.stringify({body}));
     }
 
-    function connect(subscribe, body, onDisconnect) {
+    function connect(subscribe, initialMessage, onDisconnect) {
       STATE.ws = new SockJS(STATE.stomp.endpoint);
       STATE.stompClient = Stomp.over(STATE.ws);
       STATE.stompClient.connect(
           {},
           frame => {
             if (subscribe) STATE.stompClient.subscribe(STATE.stomp.subscription, subscribe);
-            if (body) sendMessage(body);
+            if (initialMessage) sendMessage(initialMessage);
             STATE.connected = true;
           },
           _ => disconnect(onDisconnect)
@@ -78,10 +78,10 @@
           const obj = JSON.parse(json);
           render(app, obj.body)
         };
-        const message = {body: 'hi, I\'m here!'};
+        const greetingMessage = {body: 'hi, I\'m here!'};
         const onDisconnect = () => console.log('bye..');
 
-        APP.connect(subscribe, message, onDisconnect);
+        APP.connect(subscribe, greetingMessage, onDisconnect);
       }
 
       document.querySelector('#input').addEventListener('keypress', e => {
