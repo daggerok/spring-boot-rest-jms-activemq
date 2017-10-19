@@ -3,6 +3,8 @@
 
 ```bash
 bash gradlew clean build
+bash gradlew --parallel run-messaging-backend run-messaging-frontend-admin run-messaging-frontend-client
+bash gradlew dockerDown
 ```
 
 **gradle wrapper**
