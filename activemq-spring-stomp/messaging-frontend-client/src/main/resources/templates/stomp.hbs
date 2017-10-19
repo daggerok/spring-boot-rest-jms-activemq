@@ -45,7 +45,7 @@
           {},
           frame => {
             if (subscribe) STATE.stompClient.subscribe(STATE.stomp.subscription, subscribe);
-            if (hello) sendMessage(body);
+            if (body) sendMessage(body);
             STATE.connected = true;
           },
           _ => disconnect(onDisconnect)
