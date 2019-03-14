@@ -6,6 +6,10 @@ This repository contains some activemq examples
 . link:spring-boot-rest-jms-activemq/[spring-jms docker activemq]
 . link:activemq-spring-stomp/[activemq spring stomp]
 
+other repositories:
+
+. link:https://github.com/daggerok/reactive-es-cqrs-jms-app[Reactive JMS EventSourced app]
+
 resources:
 
 . https://dzone.com/articles/easy-messaging-stomp-over
