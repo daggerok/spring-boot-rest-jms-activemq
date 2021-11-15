@@ -13,3 +13,11 @@ other repositories:
 resources:
 
 . https://dzone.com/articles/easy-messaging-stomp-over
+
+== other repos
+
+. link:https://github.com/daggerok/spring-websocket-stomp
+. link:https://github.com/daggerok/spring-streaming
+. link:https://github.com/daggerok/sockjs-stomp-websocket-react-and-vanilla
+. link:https://github.com/daggerok/wsock
+. link:https://github.com/daggerok/spring-security-rest-auth-token
